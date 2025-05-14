@@ -1,0 +1,155 @@
+<table class="table table-hover" style="text-align: center;">
+    <thead class="thead-dark">
+        <tr style="text-align: center">
+            <td colspan="12" class="table_header">
+                <h3>Task List</h3>
+            </td>
+            <td class="table_header"><Button class="btn btn-warning" data-toggle="modal" data-target="#formModal"
+                    (click)="addMore()">Add Students</Button></td>
+        </tr>
+        <tr>
+            <th>Sr. No.</th>
+            <th>Task Title</th>
+            <th>Task Status</th>
+            <th>Task Remark</th>
+            <th>Task Due date</th>
+            <th>Description</th>
+            <th>Created By Id</th>
+            <th>Created By</th>
+            <th>Created date</th>
+            <th>Update By Id</th>
+            <th>Update By</th>
+            <th>Update Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of TaskModelList; let i = index">
+            <td>{{i+1}}</td>
+            <td>{{item?.taskTitle}}</td>
+            <td>{{item?.taskStatus}}</td>
+            <td>{{item?.taskRemarks}}</td>
+            <td>{{item?.taskDueDate | date:'dd-MM-yyyy'}}</td>
+            <td>{{item?.taskDescription}}</td>
+            <td>{{item?.createdById}}</td>
+            <td>{{item?.createdByName}}</td>
+            <td>{{item?.createdOn | date:'dd-MM-yyyy'}}</td>
+            <td>{{item?.lastUpdatedById}}</td>
+            <td>{{item?.lastUpdatedByName}}</td>
+            <td>{{item?.lastUpdatedOn | date:'dd-MM-yyyy'}}</td>
+            <td>
+                <button class="btn btn-success" type="button" (click)="updateStudentData(item)" data-toggle="modal"
+                    data-target="#formModal" style="margin-right: 10px;" aria-haspopup="true" aria-expanded="false">
+                    Edit
+                </button>
+                <button class="btn btn-danger" type="button" (click)="deleteData(item)" data-toggle="modal" data-target="#deleteModal"
+                    aria-haspopup="true" aria-expanded="false">
+                    Delete
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- form modal  -->
+<div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @if (seletedId> 0) {
+            <div class="modal-header bg-success">
+                <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Update Student</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cancel()">
+                    <span>&times;</span>
+                </button>
+            </div>
+            }@else{
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Add Student</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cancel()">
+                    <span>&times;</span>
+                </button>
+            </div>
+            }
+            <div class="modal-body">
+                <form [formGroup]="userDetailsForm" (ngSubmit)="regUser()">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div>
+                                    Task Title<span style="color: red; font-weight: bold;"> *</span> : <input
+                                        type="text" name="tastTitle" class="form-control" placeholder="Enter task title"
+                                        formControlName="taskTitle"
+                                        [ngClass]="{'is-invalid':isSubmited && f['taskTitle'].errors}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                Task Status<span style="color: red; font-weight: bold;"> *</span> : <input type="text"
+                                    name="taskStatus" class="form-control" placeholder="Enter task status "
+                                    formControlName="taskStatus"
+                                    [ngClass]="{'is-invalid':isSubmited && f['taskStatus'].errors}">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                Task Remark<span style="color: red; font-weight: bold;"> *</span> : <input type="text"
+                                    name="taskRemark" class="form-control" placeholder="Enter task remark"
+                                    formControlName="taskRemark"
+                                    [ngClass]="{'is-invalid':isSubmited && f['taskRemark'].errors}">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                Task Due Date<span style="color: red; font-weight: bold;"> *</span> : <input type="date"
+                                    name="duedate" class="form-control" formControlName="duedate"
+                                    [ngClass]="{'is-invalid':isSubmited && f['duedate'].errors}">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                Task Description<span style="color: red; font-weight: bold;"> *</span> : <input
+                                    type="text" name="taskDesc" class="form-control"
+                                    placeholder="Enter task description " formControlName="taskDesc"
+                                    [ngClass]="{'is-invalid':isSubmited && f['taskDesc'].errors}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" (click)="cancel()"
+                            data-dismiss="modal">Cancel</button>
+                        @if (seletedId > 0) {
+                        <button type="button" (click)="regUser()" class="btn btn-success">Update</button>
+                        }@else {
+                        <button type="button" (click)="regUser()" class="btn btn-primary">Save</button>
+                        }
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: red;">
+                <h5 class="modal-title" id="exampleModalLabel" style=" color: white;">Delete Record</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Are you sure to delete <span style="color: red;">{{name}}</span>'s record ?</h6>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" (click)="deleteUserDetail()"
+                    data-dismiss="modal">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
